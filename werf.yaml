@@ -26,6 +26,10 @@ context: src/paymentservice
 dockerfile: Dockerfile
 ---
 image: currencyservice
+context: src/currencyservice
+dockerfile: Dockerfile
+---
+image: cartservice
 context: src/cartservice/src
 dockerfile: Dockerfile
 ---
