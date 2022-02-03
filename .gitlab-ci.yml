@@ -8,4 +8,14 @@ Build:
     - source <(werf ci-env gitlab)
     - werf build
   tags: ["kubernetes-runner-for-werf"]
+  only:
+    - main
 
+Publish:
+  stage: build
+  image: ghcr.io/werf/werf
+  script:
+    - source <(werf ci-env gitlab)
+    - werf export --tag $WERF_REPO/%image%:main
+  only:
+    - main
