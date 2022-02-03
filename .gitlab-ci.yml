@@ -1,0 +1,11 @@
+stages:
+  - build
+
+Build:
+  stage: build
+  image: ghcr.io/werf/werf
+  script:
+    - source <(werf ci-env gitlab)
+    - werf build
+  tags: ["kubernetes-runner-for-werf"]
+
