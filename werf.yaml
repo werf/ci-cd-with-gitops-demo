@@ -1,0 +1,38 @@
+project: werf-gitops-sample
+configVersion: 1
+---
+image: emailservice
+context: src/emailservice
+dockerfile: Dockerfile
+---
+image: productcatalogservice
+context: src/productcatalogservice
+dockerfile: Dockerfile
+---
+image: recommendationservice
+context: src/recommendationservice
+dockerfile: Dockerfile
+---
+image: shippingservice
+context: src/shippingservice
+dockerfile: Dockerfile
+---
+image: checkoutservice
+context: src/checkoutservice
+dockerfile: Dockerfile
+---
+image: paymentservice
+context: src/paymentservice
+dockerfile: Dockerfile
+---
+image: currencyservice
+context: src/cartservice/src
+dockerfile: Dockerfile
+---
+image: frontend
+context: src/frontend
+dockerfile: Dockerfile
+---
+image: adservice
+context: src/adservice
+dockerfile: Dockerfile
