@@ -17,5 +17,6 @@ Publish:
   script:
     - source <(werf ci-env gitlab)
     - werf export --tag $WERF_REPO/%image%:main
+  tags: ["kubernetes-runner-for-werf"]
   only:
     - main
