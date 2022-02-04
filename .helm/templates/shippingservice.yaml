@@ -26,6 +26,8 @@ spec:
         app: shippingservice
     spec:
       serviceAccountName: default
+      imagePullSecrets:
+      - name: registrysecret
       containers:
       - name: server
         image: {{ .Values.werf.image.shippingservice }}

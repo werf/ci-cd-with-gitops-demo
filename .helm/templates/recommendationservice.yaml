@@ -27,6 +27,8 @@ spec:
     spec:
       serviceAccountName: default
       terminationGracePeriodSeconds: 5
+      imagePullSecrets:
+      - name: registrysecret
       containers:
       - name: server
         image: {{ .Values.werf.image.recommendationservice }}
