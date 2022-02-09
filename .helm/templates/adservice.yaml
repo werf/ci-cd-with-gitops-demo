@@ -41,6 +41,8 @@ spec:
         ports:
         - containerPort: 9555
         env:
+        - name: TEST
+          value: "test1"
         - name: PORT
           value: "9555"
         - name: DISABLE_STATS
