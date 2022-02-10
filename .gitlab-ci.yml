@@ -1,22 +1,22 @@
 stages:
-  - build
+- build
 
-Build:
-  stage: build
+default:
   image: ghcr.io/werf/werf:1.2-alpha
-  script:
-    - source <(werf ci-env gitlab)
-    - werf build
+  before_script:
+  - source <(werf ci-env gitlab)
   tags: ["kubernetes-runner-for-werf"]
-  except:
-    - main
 
 Publish:
   stage: build
-  image: ghcr.io/werf/werf:1.2-alpha
   script:
-    - source <(werf ci-env gitlab)
-    - werf bundle publish --tag 0.0.0-$(date +%s)
-  tags: ["kubernetes-runner-for-werf"]
+  - werf bundle publish --tag 0.0.0-$(date +%s)
   only:
-    - main
+  - main
+
+Build:
+  stage: build
+  script:
+  - werf build
+  only:
+  - merge_requests

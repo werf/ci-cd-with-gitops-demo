@@ -20,9 +20,9 @@ spec:
   strategy:
     canary:
       steps:
-      - setWeight: 20
+      - setWeight: 50
       - pause:
-          duration: 10s
+          duration: 30s
   selector:
     matchLabels:
       app: shippingservice
