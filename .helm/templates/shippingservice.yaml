@@ -17,6 +17,7 @@ kind: Rollout
 metadata:
   name: shippingservice
 spec:
+  replicas: 2
   strategy:
     canary:
       steps:

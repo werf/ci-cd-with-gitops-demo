@@ -17,6 +17,7 @@ kind: Rollout
 metadata:
   name: recommendationservice
 spec:
+  replicas: 2
   strategy:
     canary:
       steps:
