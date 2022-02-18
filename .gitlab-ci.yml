@@ -5,6 +5,7 @@ default:
   image: ghcr.io/werf/werf:1.2-alpha
   before_script:
   - source <(werf ci-env gitlab)
+  - export WERF_REPO=$WERF_REPO/v1
   tags: ["kubernetes-runner-for-werf"]
 
 Publish:
