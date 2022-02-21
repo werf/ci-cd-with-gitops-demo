@@ -1,5 +1,10 @@
 stages:
 - build
+- lint
+- tests
+- review
+- publish
+- cleanup
 
 default:
   image: ghcr.io/werf/werf:1.2-alpha
@@ -7,16 +12,256 @@ default:
   - source <(werf ci-env gitlab)
   tags: ["kubernetes-runner-for-werf"]
 
-Publish:
+.base_build:
   stage: build
-  script:
-  - werf bundle publish --tag 0.1.${CI_PIPELINE_ID}
-  only:
-  - main
-
-Build:
-  stage: build
-  script:
-  - werf build
+  variables:
+    WERF_REPORT_FORMAT: envfile
+    WERF_REPORT_PATH: report.env
   only:
   - merge_requests
+  except:
+  - schedules
+  artifacts:
+    reports:
+      dotenv: report.env
+
+Build emailservice:
+  extends: ".base_build"
+  script:
+  - werf build emailservice
+
+Build productcatalogservice:
+  extends: ".base_build"
+  script:
+  - werf build productcatalogservice
+
+Build recommendationservice:
+  extends: ".base_build"
+  script:
+  - werf build recommendationservice
+
+Build shippingservice:
+  extends: ".base_build"
+  script:
+  - werf build shippingservice
+
+Build checkoutservice:
+  extends: ".base_build"
+  script:
+  - werf build checkoutservice
+
+Build paymentservice:
+  extends: ".base_build"
+  script:
+  - werf build paymentservice
+
+Build currencyservice:
+  extends: ".base_build"
+  script:
+  - werf build currencyservice
+
+Build cartservice:
+  extends: ".base_build"
+  script:
+  - werf build cartservice
+
+Build frontend:
+  extends: ".base_build"
+  script:
+  - werf build frontend
+
+Build adservice:
+  extends: ".base_build"
+  script:
+  - werf build adservice
+
+Build functional-tests:
+  extends: ".base_build"
+  script:
+  - werf build functional-tests
+  only:
+  - $CI_DEFAULT_BRANCH
+
+.base_lint:
+  stage: lint
+  variables:
+    WERF_NAMESPACE: $CI_PROJECT_PATH_SLUG-lint-$CI_JOB_ID
+  only:
+  - merge_requests
+  except:
+  - schedules
+
+Lint cartservice:
+  extends: ".base_lint"
+  script:
+  # TODO: replace with "werf kube-run"
+  - kubectl -n $WERF_NAMESPACE run --generator=run-pod/v1 lesikovtest --image=$WERF_CARTSERVICE_DOCKER_IMAGE_NAME --rm --attach --restart=Never -- make lint
+  dependencies:
+  - "Build cartservice"
+
+Lint frontend:
+  extends: ".base_lint"
+  script:
+  # TODO: replace with "werf kube-run"
+  - kubectl -n $WERF_NAMESPACE run --generator=run-pod/v1 lesikovtest --image=$WERF_FRONTEND_DOCKER_IMAGE_NAME --rm --attach --restart=Never -- make lint
+  dependencies:
+  - "Build frontend"
+
+Lint productcatalogservice:
+  extends: ".base_lint"
+  script:
+  # TODO: replace with "werf kube-run"
+  - kubectl -n $WERF_NAMESPACE run --generator=run-pod/v1 lesikovtest --image=$WERF_PRODUCTCATALOGSERVICE_DOCKER_IMAGE_NAME --rm --attach --restart=Never -- make lint
+  dependencies:
+  - "Build productcatalogservice"
+
+Lint shippingservice:
+  extends: ".base_lint"
+  script:
+  # TODO: replace with "werf kube-run"
+  - kubectl -n $WERF_NAMESPACE run --generator=run-pod/v1 lesikovtest --image=$WERF_SHIPPINGSERVICE_DOCKER_IMAGE_NAME --rm --attach --restart=Never -- make lint
+  dependencies:
+  - "Build shippingservice"
+
+Lint checkoutservice:
+  extends: ".base_lint"
+  script:
+  # TODO: replace with "werf kube-run"
+  - kubectl -n $WERF_NAMESPACE run --generator=run-pod/v1 lesikovtest --image=$WERF_CHECKOUTSERVICE_DOCKER_IMAGE_NAME --rm --attach --restart=Never -- make lint
+  dependencies:
+  - "Build checkoutservice"
+
+Lint paymentservice:
+  extends: ".base_lint"
+  script:
+  # TODO: replace with "werf kube-run"
+  - kubectl -n $WERF_NAMESPACE run --generator=run-pod/v1 lesikovtest --image=$WERF_PAYMENTSERVICE_DOCKER_IMAGE_NAME --rm --attach --restart=Never -- make lint
+  dependencies:
+  - "Build paymentservice"
+
+Lint currencyservice:
+  extends: ".base_lint"
+  script:
+  # TODO: replace with "werf kube-run"
+  - kubectl -n $WERF_NAMESPACE run --generator=run-pod/v1 lesikovtest --image=$WERF_CURRENCYSERVICE_DOCKER_IMAGE_NAME --rm --attach --restart=Never -- make lint
+  dependencies:
+  - "Build currencyservice"
+
+.base_unit_tests:
+  stage: tests
+  variables:
+    WERF_NAMESPACE: $CI_PROJECT_PATH_SLUG-unit-tests-$CI_JOB_ID
+  only:
+  - merge_requests
+  except:
+  - schedules
+
+Unit-tests cartservice:
+  extends: ".base_unit_tests"
+  script:
+  # TODO: replace with "werf kube-run"
+  - kubectl -n $WERF_NAMESPACE run --generator=run-pod/v1 lesikovtest --image=$WERF_CARTSERVICE_DOCKER_IMAGE_NAME --rm --attach --restart=Never -- make unit-tests
+  dependencies:
+  - "Build cartservice"
+
+Unit-tests frontend:
+  extends: ".base_unit_tests"
+  script:
+  # TODO: replace with "werf kube-run"
+  - kubectl -n $WERF_NAMESPACE run --generator=run-pod/v1 lesikovtest --image=$WERF_FRONTEND_DOCKER_IMAGE_NAME --rm --attach --restart=Never -- make unit-tests
+  dependencies:
+  - "Build frontend"
+
+Unit-tests productcatalogservice:
+  extends: ".base_unit_tests"
+  script:
+  # TODO: replace with "werf kube-run"
+  - kubectl -n $WERF_NAMESPACE run --generator=run-pod/v1 lesikovtest --image=$WERF_PRODUCTCATALOGSERVICE_DOCKER_IMAGE_NAME --rm --attach --restart=Never -- make unit-tests
+  dependencies:
+  - "Build productcatalogservice"
+
+Unit-tests shippingservice:
+  extends: ".base_unit_tests"
+  script:
+  # TODO: replace with "werf kube-run"
+  - kubectl -n $WERF_NAMESPACE run --generator=run-pod/v1 lesikovtest --image=$WERF_SHIPPINGSERVICE_DOCKER_IMAGE_NAME --rm --attach --restart=Never -- make unit-tests
+  dependencies:
+  - "Build shippingservice"
+
+Unit-tests checkoutservice:
+  extends: ".base_unit_tests"
+  script:
+  # TODO: replace with "werf kube-run"
+  - kubectl -n $WERF_NAMESPACE run --generator=run-pod/v1 lesikovtest --image=$WERF_CHECKOUTSERVICE_DOCKER_IMAGE_NAME --rm --attach --restart=Never -- make unit-tests
+  dependencies:
+  - "Build checkoutservice"
+
+.base_review:
+  stage: review
+  environment:
+    name: review/$CI_PROJECT_PATH_SLUG-$CI_MERGE_REQUEST_SOURCE_BRANCH_NAME-$CI_MERGE_REQUEST_TARGET_BRANCH_NAME
+    url: https://$CI_PROJECT_PATH_SLUG-$CI_MERGE_REQUEST_SOURCE_BRANCH_NAME-$CI_MERGE_REQUEST_TARGET_BRANCH_NAME.kube-dev.flant.com
+  variables:
+    WERF_ENV: review
+    WERF_SET_DOMAIN: domain=$CI_PROJECT_PATH_SLUG-$CI_MERGE_REQUEST_SOURCE_BRANCH_NAME-$CI_MERGE_REQUEST_TARGET_BRANCH_NAME.kube-dev.flant.com
+    WERF_SET_ANNOTATIONS: annotations.nginx\.ingress\.kubernetes\.io/auth-url="http://basic-auth.kube-basic-auth.svc.cluster.local/argo"
+  only:
+  - merge_requests
+  except:
+  - schedules
+
+Deploy review:
+  extends: ".base_review"
+  environment:
+    on_stop: "Stop review"
+  script:
+  - export WERF_NAMESPACE="$(werf slugify -f kubernetes-namespace \"$CI_ENVIRONMENT_NAME\")"
+  - werf converge
+
+Stop review:
+  extends: ".base_review"
+  # TODO: will it work without it?
+  # variables:
+  #   GIT_STRATEGY: "none"
+  script:
+  - export WERF_NAMESPACE="$(werf slugify -f kubernetes-namespace \"$CI_ENVIRONMENT_NAME\")"
+  - werf dismiss --with-namespace
+  environment:
+    action: stop
+  when: manual
+
+Functional tests:
+  stage: tests
+  resource_group: $CI_ENVIRONMENT_NAME
+  environment:
+    name: functional-tests/$CI_COMMIT_BRANCH
+  variables:
+    WERF_ENV: functional-tests
+  script:
+  - export WERF_NAMESPACE="$(werf slugify -f kubernetes-namespace \"$CI_PROJECT_PATH_SLUG-$CI_ENVIRONMENT_NAME\")"
+  - werf dismiss
+  - werf converge
+  after_script:
+  - werf dismiss --with-namespace
+  only:
+  - $CI_DEFAULT_BRANCH
+  except:
+  - schedules
+
+Publish bundle:
+  stage: publish
+  script:
+  - werf bundle publish --tag "0.1.${CI_PIPELINE_ID}"
+  only:
+  - $CI_DEFAULT_BRANCH
+  except:
+  - schedules
+
+Werf cleanup:
+  stage: cleanup
+  script:
+  # FIXME: login without docker?
+  - echo docker login -u nobody -p "$WERF_IMAGES_CLEANUP_PASSWORD" "$WERF_REPO"
+  - echo werf cleanup
+  only:
+  - schedules

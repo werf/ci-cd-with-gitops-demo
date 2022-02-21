@@ -19,7 +19,6 @@ require('@google-cloud/trace-agent').start();
 
 const path = require('path');
 const grpc = require('grpc');
-const leftPad = require('left-pad');
 const pino = require('pino');
 
 const PROTO_PATH = path.join(__dirname, './proto/demo.proto');
@@ -46,7 +45,7 @@ const request = {
 };
 
 function _moneyToString (m) {
-  return `${m.units}.${m.nanos.toString().padStart(9,'0')} ${m.currency_code}`;
+  return `${m.units}.${m.nanos.toString().padStart(9, '0')} ${m.currency_code}`;
 }
 
 client.getSupportedCurrencies({}, (err, response) => {

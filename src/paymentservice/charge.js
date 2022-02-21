@@ -23,7 +23,6 @@ const logger = pino({
   useLevelLabels: true
 });
 
-
 class CreditCardError extends Error {
   constructor (message) {
     super(message);
@@ -33,7 +32,7 @@ class CreditCardError extends Error {
 
 class InvalidCreditCard extends CreditCardError {
   constructor (cardType) {
-    super(`Credit card info is invalid`);
+    super('Credit card info is invalid');
   }
 }
 

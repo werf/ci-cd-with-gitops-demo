@@ -1,0 +1,16 @@
+{{- if eq $.Values.werf.env "functional-tests" }}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: functional-tests
+  helm.sh/hook: post-install
+spec:
+  backoffLimit: 0
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+      - name: functional-tests
+        image: {{ $.Values.werf.image.functionalTests }}
+        command: ["echo", "FIXME"]
+{{- end }}
