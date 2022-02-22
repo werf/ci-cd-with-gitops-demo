@@ -263,8 +263,7 @@ Publish bundle:
 Werf cleanup:
   stage: cleanup
   script:
-  # FIXME: login without docker?
-  - echo docker login -u nobody -p "$WERF_IMAGES_CLEANUP_PASSWORD" "$WERF_REPO"
-  - echo werf cleanup
+  - werf cr login "$WERF_REPO"
+  - werf cleanup
   only:
   - schedules
