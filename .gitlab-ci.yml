@@ -18,6 +18,7 @@ default:
     WERF_REPORT_FORMAT: envfile
     WERF_REPORT_PATH: report.env
   only:
+  - main
   - merge_requests
   except:
   - schedules
