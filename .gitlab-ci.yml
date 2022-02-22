@@ -79,7 +79,7 @@ Build adservice:
 Build functional-tests:
   extends: ".base_build"
   script:
-  - werf build functional-tests
+  - werf build functionalTests
   only:
   - main
 
