@@ -80,7 +80,7 @@ Build functional-tests:
   script:
   - werf build functional-tests
   only:
-  - $CI_DEFAULT_BRANCH
+  - main
 
 .base_lint:
   stage: lint
@@ -244,7 +244,7 @@ Functional tests:
   after_script:
   - werf dismiss --with-namespace
   only:
-  - $CI_DEFAULT_BRANCH
+  - main
   except:
   - schedules
 
@@ -253,7 +253,7 @@ Publish bundle:
   script:
   - werf bundle publish --tag "0.1.${CI_PIPELINE_ID}"
   only:
-  - $CI_DEFAULT_BRANCH
+  - main
   except:
   - schedules
 
