@@ -12,6 +12,10 @@ default:
   - source <(werf ci-env gitlab)
   tags: ["kubernetes-runner-for-werf"]
 
+variables:
+  PROJECT_NAME: werf-boutique-push
+  CLUSTER_DOMAIN: kube-dev.flant.com
+
 .base_build:
   stage: build
   variables:
@@ -86,7 +90,7 @@ Build functional-tests:
 .base_lint:
   stage: lint
   variables:
-    WERF_NAMESPACE: $CI_PROJECT_PATH_SLUG-lint-$CI_JOB_ID
+    WERF_NAMESPACE: $PROJECT_NAME-lint-$CI_JOB_ID
   only:
   - merge_requests
   except:
@@ -152,7 +156,7 @@ Lint currencyservice:
 .base_unit_tests:
   stage: tests
   variables:
-    WERF_NAMESPACE: $CI_PROJECT_PATH_SLUG-unit-tests-$CI_JOB_ID
+    WERF_NAMESPACE: $PROJECT_NAME-unit-tests-$CI_JOB_ID
   only:
   - merge_requests
   except:
@@ -202,11 +206,11 @@ Unit-tests checkoutservice:
 .base_review:
   stage: review
   environment:
-    name: review/$CI_PROJECT_PATH_SLUG-$CI_MERGE_REQUEST_SOURCE_BRANCH_NAME-$CI_MERGE_REQUEST_TARGET_BRANCH_NAME
-    url: https://$CI_PROJECT_PATH_SLUG-$CI_MERGE_REQUEST_SOURCE_BRANCH_NAME-$CI_MERGE_REQUEST_TARGET_BRANCH_NAME.kube-dev.flant.com
+    name: review/$CI_MERGE_REQUEST_SOURCE_BRANCH_NAME-$CI_MERGE_REQUEST_TARGET_BRANCH_NAME
+    url: https://$PROJECT_NAME-$CI_MERGE_REQUEST_SOURCE_BRANCH_NAME-$CI_MERGE_REQUEST_TARGET_BRANCH_NAME.$CLUSTER_DOMAIN
   variables:
     WERF_ENV: review
-    WERF_SET_DOMAIN: domain=$CI_PROJECT_PATH_SLUG-$CI_MERGE_REQUEST_SOURCE_BRANCH_NAME-$CI_MERGE_REQUEST_TARGET_BRANCH_NAME.kube-dev.flant.com
+    WERF_SET_DOMAIN: domain=$PROJECT_NAME-$CI_MERGE_REQUEST_SOURCE_BRANCH_NAME-$CI_MERGE_REQUEST_TARGET_BRANCH_NAME.$CLUSTER_DOMAIN
     WERF_SET_ANNOTATIONS: annotations.nginx\.ingress\.kubernetes\.io/auth-url="http://basic-auth.kube-basic-auth.svc.cluster.local/argo"
   only:
   - merge_requests
@@ -218,7 +222,7 @@ Deploy review:
   environment:
     on_stop: "Stop review"
   script:
-  - export WERF_NAMESPACE="$(werf slugify -f kubernetes-namespace \"$CI_ENVIRONMENT_NAME\")"
+  - export WERF_NAMESPACE="$(werf slugify -f kubernetes-namespace \"$PROJECT_NAME-$CI_ENVIRONMENT_NAME\")"
   - werf converge
 
 Stop review:
@@ -227,7 +231,7 @@ Stop review:
   # variables:
   #   GIT_STRATEGY: "none"
   script:
-  - export WERF_NAMESPACE="$(werf slugify -f kubernetes-namespace \"$CI_ENVIRONMENT_NAME\")"
+  - export WERF_NAMESPACE="$(werf slugify -f kubernetes-namespace \"$PROJECT_NAME-$CI_ENVIRONMENT_NAME\")"
   - werf dismiss --with-namespace
   environment:
     action: stop
@@ -235,14 +239,14 @@ Stop review:
 
 Functional tests:
   stage: tests
-  resource_group: $CI_ENVIRONMENT_NAME
+  resource_group: functional-tests
   environment:
-    name: functional-tests/$CI_COMMIT_BRANCH
+    name: functional-tests
   variables:
     WERF_ENV: functional-tests
-    WERF_SET_DOMAIN: domain=boutique-functional-tests.kube-dev.flant.com
+    WERF_SET_DOMAIN: domain=$PROJECT_NAME-functional-tests.$CLUSTER_DOMAIN
   script:
-  - export WERF_NAMESPACE="$(werf slugify -f kubernetes-namespace \"$CI_PROJECT_PATH_SLUG-$CI_ENVIRONMENT_NAME\")"
+  - export WERF_NAMESPACE="$(werf slugify -f kubernetes-namespace \"$PROJECT_NAME-$CI_ENVIRONMENT_NAME\")"
   - werf dismiss || true
   - werf converge
   after_script:
