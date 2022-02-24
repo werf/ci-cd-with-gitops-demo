@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM golang:1.17.5-alpine as builder
+FROM ghcr.io/werf/ci-cd-demo/golang:1.17.5-alpine as builder
 RUN apk add --no-cache ca-certificates git
 RUN apk add build-base
 WORKDIR /src
@@ -23,7 +23,7 @@ COPY . .
 
 RUN go build -o /go/bin/frontend .
 
-FROM alpine as release
+FROM ghcr.io/werf/ci-cd-demo/alpine as release
 RUN apk add --no-cache ca-certificates \
     busybox-extras net-tools bind-tools make
 WORKDIR /src
