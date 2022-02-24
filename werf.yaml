@@ -1,4 +1,4 @@
-project: werf-boutique-push
+project: werf-boutique-pull
 configVersion: 1
 
 ---
