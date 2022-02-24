@@ -96,6 +96,7 @@ Build functional-tests:
   after_script:
   - kubectl delete ns $WERF_NAMESPACE --wait=false
   only:
+  - main
   - merge_requests
   except:
   - schedules
@@ -166,6 +167,7 @@ Lint currencyservice:
   after_script:
   - kubectl delete ns $WERF_NAMESPACE --wait=false
   only:
+  - main
   - merge_requests
   except:
   - schedules
