@@ -245,8 +245,8 @@ Functional tests:
   variables:
     WERF_ENV: functional-tests
     WERF_SET_DOMAIN: domain=$PROJECT_NAME-functional-tests.$CLUSTER_DOMAIN
+    WERF_NAMESPACE: $PROJECT_NAME-$CI_ENVIRONMENT_NAME
   script:
-  - export WERF_NAMESPACE="$(werf slugify -f kubernetes-namespace \"$PROJECT_NAME-$CI_ENVIRONMENT_NAME\")"
   - werf dismiss || true
   - werf converge
   after_script:
