@@ -91,6 +91,10 @@ Build functional-tests:
   stage: lint
   variables:
     WERF_NAMESPACE: $PROJECT_NAME-lint-$CI_JOB_ID
+  before_script:
+  - kubectl create ns $WERF_NAMESPACE
+  after_script:
+  - kubectl delete ns $WERF_NAMESPACE --wait=false
   only:
   - merge_requests
   except:
@@ -157,6 +161,10 @@ Lint currencyservice:
   stage: tests
   variables:
     WERF_NAMESPACE: $PROJECT_NAME-unit-tests-$CI_JOB_ID
+  before_script:
+  - kubectl create ns $WERF_NAMESPACE
+  after_script:
+  - kubectl delete ns $WERF_NAMESPACE --wait=false
   only:
   - merge_requests
   except:
