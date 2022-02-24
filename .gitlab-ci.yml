@@ -242,7 +242,7 @@ Functional tests:
     WERF_ENV: functional-tests
   script:
   - export WERF_NAMESPACE="$(werf slugify -f kubernetes-namespace \"$CI_PROJECT_PATH_SLUG-$CI_ENVIRONMENT_NAME\")"
-  - werf dismiss
+  - werf dismiss || true
   - werf converge
   after_script:
   - werf dismiss --with-namespace
