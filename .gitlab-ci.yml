@@ -240,6 +240,7 @@ Functional tests:
     name: functional-tests/$CI_COMMIT_BRANCH
   variables:
     WERF_ENV: functional-tests
+    WERF_SET_DOMAIN: domain=boutique-functional-tests.kube-dev.flant.com
   script:
   - export WERF_NAMESPACE="$(werf slugify -f kubernetes-namespace \"$CI_PROJECT_PATH_SLUG-$CI_ENVIRONMENT_NAME\")"
   - werf dismiss || true
