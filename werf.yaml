@@ -1,4 +1,4 @@
-project: werf-gitops-sample
+project: pull-ci-cd-demo
 configVersion: 1
 
 ---
@@ -52,7 +52,6 @@ context: src/adservice
 dockerfile: Dockerfile
 
 ---
-# FIXME:
-image: functionalTests
-context: src/loadgenerator
+image: functional-tests
+context: test/functional
 dockerfile: Dockerfile

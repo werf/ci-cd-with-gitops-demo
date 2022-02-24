@@ -3,14 +3,23 @@ apiVersion: batch/v1
 kind: Job
 metadata:
   name: functional-tests
-  helm.sh/hook: post-install
+  annotations:
+    "helm.sh/hook": post-install
 spec:
   backoffLimit: 0
   template:
     spec:
       restartPolicy: Never
+      imagePullSecrets:
+      - name: registrysecret
       containers:
       - name: functional-tests
-        image: {{ $.Values.werf.image.functionalTests }}
-        command: ["echo", "FIXME"]
+        image: {{ index $.Values.werf.image "functional-tests" }}
+        env:
+        - name: FRONTEND_URL
+          value: {{ $.Values.domain }}
+        - name: BASIC_AUTH_USERNAME
+          value: {{ $.Values.functionalTests.auth.username }}
+        - name: BASIC_AUTH_PASSWORD
+          value: {{ $.Values.functionalTests.auth.password }}
 {{- end }}
