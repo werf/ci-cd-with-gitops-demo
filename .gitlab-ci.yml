@@ -13,7 +13,7 @@ default:
   tags: ["kubernetes-runner-for-werf"]
 
 variables:
-  PROJECT_NAME: werf-boutique-push
+  PROJECT_NAME: werf-boutique-pull
   CLUSTER_DOMAIN: kube-dev.flant.com
 
 .base_build:
