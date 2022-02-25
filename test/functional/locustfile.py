@@ -17,6 +17,7 @@
 import random
 import os
 from locust import HttpUser, TaskSet, between
+import locust_plugins
 
 products = [
     '0PUK6V6EV0',
