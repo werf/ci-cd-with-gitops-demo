@@ -57,7 +57,7 @@ Build checkoutservice:
 Build paymentservice:
   extends: ".base_build"
   script:
-  - werf build paymentservice paymentservice-src
+  - werf build paymentservice
 
 Build currencyservice:
   extends: ".base_build"
@@ -101,15 +101,6 @@ Build functional-tests:
   - schedules
   tags: ["tfprod-distributed-werf"]
 
-Lint cartservice:
-  extends: ".base_lint"
-  script:
-  # TODO: replace with "werf kube-run"
-  - |
-    kubectl -n $WERF_NAMESPACE run --generator=run-pod/v1 lint-cartservice --image=$WERF_CARTSERVICE_SRC_DOCKER_IMAGE_NAME --rm -i --restart=Never --command --overrides='{"spec": {"imagePullSecrets": [{"name": "registrysecret"}]}}' -- make lint
-  dependencies:
-  - "Build cartservice"
-
 Lint frontend:
   extends: ".base_lint"
   script:
@@ -151,7 +142,7 @@ Lint paymentservice:
   script:
   # TODO: replace with "werf kube-run"
   - |
-    kubectl -n $WERF_NAMESPACE run --generator=run-pod/v1 lint-paymentservice --image=$WERF_PAYMENTSERVICE_SRC_DOCKER_IMAGE_NAME --rm -i --restart=Never --command --overrides='{"spec": {"imagePullSecrets": [{"name": "registrysecret"}]}}' -- make lint
+    kubectl -n $WERF_NAMESPACE run --generator=run-pod/v1 lint-paymentservice --image=$WERF_PAYMENTSERVICE_DOCKER_IMAGE_NAME --rm -i --restart=Never --command --overrides='{"spec": {"imagePullSecrets": [{"name": "registrysecret"}]}}' -- make lint
   dependencies:
   - "Build paymentservice"
 

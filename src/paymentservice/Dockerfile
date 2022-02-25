@@ -20,8 +20,7 @@ FROM base as builder
 # deps for post-install scripts
 RUN apk add --update --no-cache \
     python3 \
-    make \
-    g++ 
+    g++
 
 WORKDIR /usr/src/app
 

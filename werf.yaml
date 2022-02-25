@@ -56,12 +56,6 @@ context: src/paymentservice
 dockerfile: Dockerfile
 
 ---
-image: paymentservice-src
-context: src/paymentservice
-dockerfile: Dockerfile
-target: builder
-
----
 image: currencyservice
 context: src/currencyservice
 dockerfile: Dockerfile
