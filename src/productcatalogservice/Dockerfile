@@ -13,7 +13,7 @@
 # limitations under the License.
 
 FROM ghcr.io/werf/ci-cd-demo/golang:1.17.5-alpine AS builder
-RUN apk add --no-cache ca-certificates git
+RUN apk add --no-cache ca-certificates git make
 RUN apk add build-base
 
 WORKDIR /src

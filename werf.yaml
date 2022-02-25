@@ -1,4 +1,4 @@
-project: werf-boutique-pull
+project: pull-ci-cd-demo
 configVersion: 1
 
 ---
@@ -7,9 +7,21 @@ context: src/emailservice
 dockerfile: Dockerfile
 
 ---
+image: emailservice-src
+context: src/emailservice
+dockerfile: Dockerfile
+target: builder
+
+---
 image: productcatalogservice
 context: src/productcatalogservice
 dockerfile: Dockerfile
+
+---
+image: productcatalogservice-src
+context: src/productcatalogservice
+dockerfile: Dockerfile
+target: builder
 
 ---
 image: recommendationservice
@@ -22,9 +34,21 @@ context: src/shippingservice
 dockerfile: Dockerfile
 
 ---
+image: shippingservice-src
+context: src/shippingservice
+dockerfile: Dockerfile
+target: builder
+
+---
 image: checkoutservice
 context: src/checkoutservice
 dockerfile: Dockerfile
+
+---
+image: checkoutservice-src
+context: src/checkoutservice
+dockerfile: Dockerfile
+target: builder
 
 ---
 image: paymentservice
@@ -32,9 +56,21 @@ context: src/paymentservice
 dockerfile: Dockerfile
 
 ---
+image: paymentservice-src
+context: src/paymentservice
+dockerfile: Dockerfile
+target: builder
+
+---
 image: currencyservice
 context: src/currencyservice
 dockerfile: Dockerfile
+
+---
+image: currencyservice-src
+context: src/currencyservice
+dockerfile: Dockerfile
+target: builder
 
 ---
 image: cartservice
@@ -42,14 +78,32 @@ context: src/cartservice/src
 dockerfile: Dockerfile
 
 ---
+image: cartservice-src
+context: src/cartservice/src
+dockerfile: Dockerfile
+target: builder
+
+---
 image: frontend
 context: src/frontend
 dockerfile: Dockerfile
 
 ---
+image: frontend-src
+context: src/frontend
+dockerfile: Dockerfile
+target: builder
+
+---
 image: adservice
 context: src/adservice
 dockerfile: Dockerfile
+
+---
+image: adservice-src
+context: src/adservice
+dockerfile: Dockerfile
+target: builder
 
 ---
 image: functional-tests

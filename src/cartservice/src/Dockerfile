@@ -13,8 +13,16 @@
 # limitations under the License.
 
 # https://mcr.microsoft.com/v2/dotnet/sdk/tags/list
+
 FROM mcr.microsoft.com/dotnet/sdk:6.0.101 as builder
+
+RUN apt-get -qq update \
+    && apt-get install -y --no-install-recommends \
+        make \
+    && rm -rf /var/lib/apt/lists/*
+
 WORKDIR /app
+
 COPY cartservice.csproj .
 RUN dotnet restore cartservice.csproj -r linux-musl-x64
 COPY . .
