@@ -254,6 +254,7 @@ Functional tests:
     name: functional-tests
   variables:
     WERF_SET_DOMAIN: domain=$CI_PROJECT_PATH_SLUG-functional-tests.$CLUSTER_DOMAIN
+    WERF_SET_ANNOTATIONS: annotations.nginx\.ingress\.kubernetes\.io/auth-url="http://basic-auth.kube-basic-auth.svc.cluster.local/argo"
   script:
   - werf dismiss || true
   - werf converge
