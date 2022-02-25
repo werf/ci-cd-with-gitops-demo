@@ -259,6 +259,7 @@ Functional tests:
   - werf dismiss || true
   - werf converge
   after_script:
+  - source <(werf ci-env gitlab)
   - werf dismiss --with-namespace
   only:
   - main
