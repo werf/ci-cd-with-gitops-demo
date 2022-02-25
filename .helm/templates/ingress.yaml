@@ -4,7 +4,9 @@ metadata:
   name: boutique
   annotations:
     kubernetes.io/ingress.class: nginx
+    {{- if $.Values.annotations }}
     {{ $.Values.annotations | toYaml | nindent 4 }}
+    {{- end }}
 spec:
   rules:
   - host: {{ $.Values.domain | required "$.Values.domain required" | quote }}
