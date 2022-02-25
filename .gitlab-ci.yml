@@ -62,7 +62,7 @@ Build paymentservice:
 Build currencyservice:
   extends: ".base_build"
   script:
-  - werf build currencyservice currencyservice-src
+  - werf build currencyservice
 
 Build cartservice:
   extends: ".base_build"
@@ -151,7 +151,7 @@ Lint currencyservice:
   script:
   # TODO: replace with "werf kube-run"
   - |
-    kubectl -n $WERF_NAMESPACE run --generator=run-pod/v1 lint-currencyservice --image=$WERF_CURRENCYSERVICE_SRC_DOCKER_IMAGE_NAME --rm -i --restart=Never --command --overrides='{"spec": {"imagePullSecrets": [{"name": "registrysecret"}]}}' -- make lint
+    kubectl -n $WERF_NAMESPACE run --generator=run-pod/v1 lint-currencyservice --image=$WERF_CURRENCYSERVICE_DOCKER_IMAGE_NAME --rm -i --restart=Never --command --overrides='{"spec": {"imagePullSecrets": [{"name": "registrysecret"}]}}' -- make lint
   dependencies:
   - "Build currencyservice"
 

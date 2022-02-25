@@ -61,12 +61,6 @@ context: src/currencyservice
 dockerfile: Dockerfile
 
 ---
-image: currencyservice-src
-context: src/currencyservice
-dockerfile: Dockerfile
-target: builder
-
----
 image: cartservice
 context: src/cartservice/src
 dockerfile: Dockerfile
