@@ -12,11 +12,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+{{- if eq $.Values.werf.env "production" }}
 apiVersion: argoproj.io/v1alpha1
 kind: Rollout
+{{- else }}
+apiVersion: apps/v1
+kind: Deployment
+{{- end }}
 metadata:
   name: emailservice
 spec:
+  {{- if eq $.Values.werf.env "production" }}
   replicas: 2
   strategy:
     canary:
@@ -24,6 +30,9 @@ spec:
       - setWeight: 50
       - pause:
           duration: 30s
+  {{- else }}
+  replicas: 1
+  {{- end }}
   selector:
     matchLabels:
       app: emailservice
