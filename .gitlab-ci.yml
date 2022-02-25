@@ -238,9 +238,6 @@ Deploy review:
 
 Stop review:
   extends: ".base_review"
-  # TODO: will it work without it?
-  # variables:
-  #   GIT_STRATEGY: "none"
   script:
   - werf dismiss --with-namespace
   environment:
