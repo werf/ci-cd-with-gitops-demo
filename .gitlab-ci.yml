@@ -89,7 +89,7 @@ Build functional-tests:
 .base_lint:
   stage: lint
   variables:
-    WERF_NAMESPACE: $CI_PROJECT_NAME-lint-$CI_JOB_ID
+    WERF_NAMESPACE: $CI_PROJECT_PATH_SLUG-lint-$CI_JOB_ID
   before_script:
   - kubectl create ns $WERF_NAMESPACE
   after_script:
@@ -167,7 +167,7 @@ Lint currencyservice:
 .base_unit_tests:
   stage: tests
   variables:
-    WERF_NAMESPACE: $CI_PROJECT_NAME-unit-tests-$CI_JOB_ID
+    WERF_NAMESPACE: $CI_PROJECT_PATH_SLUG-unit-tests-$CI_JOB_ID
   before_script:
   - kubectl create ns $WERF_NAMESPACE
   after_script:
@@ -228,10 +228,10 @@ Unit-tests checkoutservice:
   stage: review
   environment:
     name: review/$CI_MERGE_REQUEST_SOURCE_BRANCH_NAME-$CI_MERGE_REQUEST_TARGET_BRANCH_NAME
-    url: https://$CI_PROJECT_NAME-$CI_MERGE_REQUEST_SOURCE_BRANCH_NAME-$CI_MERGE_REQUEST_TARGET_BRANCH_NAME.$CLUSTER_DOMAIN
+    url: https://$CI_PROJECT_PATH_SLUG-$CI_MERGE_REQUEST_SOURCE_BRANCH_NAME-$CI_MERGE_REQUEST_TARGET_BRANCH_NAME.$CLUSTER_DOMAIN
   variables:
     WERF_ENV: review
-    WERF_SET_DOMAIN: domain=$CI_PROJECT_NAME-$CI_MERGE_REQUEST_SOURCE_BRANCH_NAME-$CI_MERGE_REQUEST_TARGET_BRANCH_NAME.$CLUSTER_DOMAIN
+    WERF_SET_DOMAIN: domain=$CI_PROJECT_PATH_SLUG-$CI_MERGE_REQUEST_SOURCE_BRANCH_NAME-$CI_MERGE_REQUEST_TARGET_BRANCH_NAME.$CLUSTER_DOMAIN
     WERF_SET_ANNOTATIONS: annotations.nginx\.ingress\.kubernetes\.io/auth-url="http://basic-auth.kube-basic-auth.svc.cluster.local/argo"
   only:
   - merge_requests
@@ -262,7 +262,7 @@ Functional tests:
   environment:
     name: functional-tests
   variables:
-    WERF_SET_DOMAIN: domain=$CI_PROJECT_NAME-functional-tests.$CLUSTER_DOMAIN
+    WERF_SET_DOMAIN: domain=$CI_PROJECT_PATH_SLUG-functional-tests.$CLUSTER_DOMAIN
   script:
   - werf dismiss || true
   - werf converge

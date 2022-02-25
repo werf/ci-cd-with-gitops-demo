@@ -1,4 +1,4 @@
-project: pull-ci-cd-demo
+project: werf-pull-ci-cd-demo
 configVersion: 1
 
 ---
