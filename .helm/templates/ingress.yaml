@@ -19,11 +19,14 @@ spec:
             name: frontend
             port:
               number: 80
+  {{- if index (list "production" "review") $.Values.werf.env }}
   tls:
   - hosts:
     - {{ $.Values.domain | required "$.Values.domain required" | quote }}
     secretName: boutique-tls
+  {{- end }}
 
+{{- if index (list "production" "review") $.Values.werf.env }}
 ---
 apiVersion: cert-manager.io/v1
 kind: Certificate
@@ -37,4 +40,4 @@ spec:
     kind: ClusterIssuer
     name: letsencrypt
   secretName: boutique-tls
-
+{{- end }}
