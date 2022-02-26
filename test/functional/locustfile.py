@@ -16,7 +16,7 @@
 
 import random
 import os
-from locust import HttpUser, TaskSet, between
+from locust import HttpUser, task
 import locust_plugins
 
 products = [
@@ -69,18 +69,12 @@ def checkout(l):
         'credit_card_cvv': '672',
     }, auth=getBasicAuth())
 
-class UserBehavior(TaskSet):
-
-    def on_start(self):
-        index(self)
-
-    tasks = {index: 1,
-        setCurrency: 2,
-        browseProduct: 10,
-        addToCart: 2,
-        viewCart: 3,
-        checkout: 1}
-
 class WebsiteUser(HttpUser):
-    tasks = [UserBehavior]
-    wait_time = between(1, 10)
+    @task
+    def mainTask(self):
+        index(self)
+        setCurrency(self)
+        browseProduct(self)
+        addToCart(self)
+        viewCart(self)
+        checkout(self)
