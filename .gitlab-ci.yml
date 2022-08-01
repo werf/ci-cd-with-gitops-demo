@@ -1,8 +1,8 @@
 stages:
 - build
-- lint
-- tests
+- test
 - review
+- release-test
 - release
 - cleanup
 
@@ -83,7 +83,7 @@ Build functional-tests:
   - main
 
 .base_lint:
-  stage: lint
+  stage: test
   only:
   - main
   - merge_requests
@@ -94,86 +94,64 @@ Lint frontend:
   extends: ".base_lint"
   script:
   - werf kube-run frontend-src --namespace $TEST_NAMESPACE -- make lint
-  dependencies:
-  - "Build frontend"
 
 Lint productcatalogservice:
   extends: ".base_lint"
   script:
   - werf kube-run productcatalogservice-src --namespace $TEST_NAMESPACE -- make lint
-  dependencies:
-  - "Build productcatalogservice"
 
 Lint shippingservice:
   extends: ".base_lint"
   script:
   - werf kube-run shippingservice-src --namespace $TEST_NAMESPACE -- make lint
-  dependencies:
-  - "Build shippingservice"
 
 Lint checkoutservice:
   extends: ".base_lint"
   script:
   - werf kube-run checkoutservice-src --namespace $TEST_NAMESPACE -- make lint
-  dependencies:
-  - "Build checkoutservice"
 
 Lint paymentservice:
   extends: ".base_lint"
   script:
   - werf kube-run paymentservice --namespace $TEST_NAMESPACE -- make lint
-  dependencies:
-  - "Build paymentservice"
 
 Lint currencyservice:
   extends: ".base_lint"
   script:
   - werf kube-run currencyservice --namespace $TEST_NAMESPACE -- make lint
-  dependencies:
-  - "Build currencyservice"
 
 .base_unit_tests:
-  stage: tests
+  stage: test
   only:
   - main
   - merge_requests
   except:
   - schedules
 
-Unit-tests cartservice:
+Unit tests cartservice:
   extends: ".base_unit_tests"
   script:
   - werf kube-run cartservice-src --namespace $TEST_NAMESPACE -- make unit-tests
-  dependencies:
-  - "Build cartservice"
 
-Unit-tests frontend:
+Unit tests frontend:
   extends: ".base_unit_tests"
   script:
   - werf kube-run frontend-src --namespace $TEST_NAMESPACE -- make unit-tests
-  dependencies:
-  - "Build frontend"
 
-Unit-tests productcatalogservice:
+Unit tests productcatalogservice:
   extends: ".base_unit_tests"
   script:
   - werf kube-run productcatalogservice-src --namespace $TEST_NAMESPACE -- make unit-tests
-  dependencies:
-  - "Build productcatalogservice"
 
-Unit-tests shippingservice:
+Unit tests shippingservice:
   extends: ".base_unit_tests"
   script:
   - werf kube-run shippingservice-src --namespace $TEST_NAMESPACE -- make unit-tests
-  dependencies:
-  - "Build shippingservice"
 
-Unit-tests checkoutservice:
+Unit tests checkoutservice:
   extends: ".base_unit_tests"
   script:
   - werf kube-run checkoutservice-src --namespace $TEST_NAMESPACE -- make unit-tests
-  dependencies:
-  - "Build checkoutservice"
 
 .base_review:
   stage: review
