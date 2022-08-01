@@ -182,13 +182,13 @@ Stop review:
     action: stop
   when: manual
 
-Functional tests:
-  stage: tests
-  resource_group: functional-tests
+Release tests:
+  stage: release-test
+  resource_group: release-tests
   environment:
-    name: functional-tests
+    name: release-tests
   variables:
-    WERF_SET_DOMAIN: domain=$CI_PROJECT_NAME-functional-tests.$CLUSTER_DOMAIN
+    WERF_SET_DOMAIN: domain=$CI_PROJECT_NAME-release-tests.$CLUSTER_DOMAIN
     WERF_SET_ANNOTATIONS: annotations.nginx\.ingress\.kubernetes\.io/auth-url="http://basic-auth.kube-basic-auth.svc.cluster.local/argo"
   script:
   - werf converge
