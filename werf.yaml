@@ -83,17 +83,38 @@ dockerfile: Dockerfile
 target: builder
 
 ---
-image: adservice
-context: src/adservice
+image: functional-tests
+context: test/functional
 dockerfile: Dockerfile
 
 ---
 image: adservice-src
-context: src/adservice
-dockerfile: Dockerfile
-target: builder
+from: ghcr.io/werf/ci-cd-demo/openjdk:8-slim
+shell:
+  install:
+  - cd /app
+  - bash ./gradlew installDist
+git:
+- add: /src/adservice
+  to: /app
 
 ---
-image: functional-tests
-context: test/functional
-dockerfile: Dockerfile
+image: adservice
+from: ghcr.io/werf/ci-cd-demo/openjdk:8-slim
+shell:
+  install:
+  - apt-get -y update
+  - apt-get install -qqy wget
+  - rm -rf /var/lib/apt/lists/*
+  - export RUN GRPC_HEALTH_PROBE_VERSION=v0.4.11
+  - wget -qO/bin/grpc_health_probe https://github.com/grpc-ecosystem/grpc-health-probe/releases/download/${GRPC_HEALTH_PROBE_VERSION}/grpc_health_probe-linux-amd64
+  - chmod +x /bin/grpc_health_probe
+docker:
+  WORKDIR: /app
+  EXPOSE: ["9555"]
+  ENTRYPOINT: "/app/build/install/hipstershop/bin/AdService"
+import:
+- image: adservice-src
+  after: install
+  add: /app
+  to: /app
