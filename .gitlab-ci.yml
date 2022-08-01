@@ -3,31 +3,27 @@ stages:
 - lint
 - tests
 - review
-- publish
+- release
 - cleanup
 
 default:
   image: ghcr.io/werf/werf:1.2-alpha
   before_script:
-  - source <(werf ci-env gitlab)
+  - . $(werf ci-env gitlab --as-file)
   tags: ["kubernetes-runner-for-werf"]
 
 variables:
   CLUSTER_DOMAIN: kube-dev.flant.com
+  TEST_NAMESPACE: ci-cd-with-gitops-tests
+  WERF_AUTO_PULL_SECRET: true
 
 .base_build:
   stage: build
-  variables:
-    WERF_REPORT_FORMAT: envfile
-    WERF_REPORT_PATH: report.env
   only:
   - main
   - merge_requests
   except:
   - schedules
-  artifacts:
-    reports:
-      dotenv: report.env
 
 Build emailservice:
   extends: ".base_build"
@@ -88,130 +84,94 @@ Build functional-tests:
 
 .base_lint:
   stage: lint
-  variables:
-    WERF_NAMESPACE: $CI_PROJECT_NAME-lint-$CI_JOB_ID
-  before_script:
-  - kubectl create ns $WERF_NAMESPACE
-  after_script:
-  - kubectl delete ns $WERF_NAMESPACE --wait=false
   only:
   - main
   - merge_requests
   except:
   - schedules
-  tags: ["tfprod-distributed-werf"]
 
 Lint frontend:
   extends: ".base_lint"
   script:
-  # TODO: replace with "werf kube-run"
-  - |
-    kubectl -n $WERF_NAMESPACE run --generator=run-pod/v1 lint-frontend --image=$WERF_FRONTEND_SRC_DOCKER_IMAGE_NAME --rm -i --restart=Never --command --overrides='{"spec": {"imagePullSecrets": [{"name": "registrysecret"}]}}' -- make lint
+  - werf kube-run frontend-src --namespace $TEST_NAMESPACE -- make lint
   dependencies:
   - "Build frontend"
 
 Lint productcatalogservice:
   extends: ".base_lint"
   script:
-  # TODO: replace with "werf kube-run"
-  - |
-    kubectl -n $WERF_NAMESPACE run --generator=run-pod/v1 lint-productcatalogservice --image=$WERF_PRODUCTCATALOGSERVICE_SRC_DOCKER_IMAGE_NAME --rm -i --restart=Never --command --overrides='{"spec": {"imagePullSecrets": [{"name": "registrysecret"}]}}' -- make lint
+  - werf kube-run productcatalogservice-src --namespace $TEST_NAMESPACE -- make lint
   dependencies:
   - "Build productcatalogservice"
 
 Lint shippingservice:
   extends: ".base_lint"
   script:
-  # TODO: replace with "werf kube-run"
-  - |
-    kubectl -n $WERF_NAMESPACE run --generator=run-pod/v1 lint-shippingservice --image=$WERF_SHIPPINGSERVICE_SRC_DOCKER_IMAGE_NAME --rm -i --restart=Never --command --overrides='{"spec": {"imagePullSecrets": [{"name": "registrysecret"}]}}' -- make lint
+  - werf kube-run shippingservice-src --namespace $TEST_NAMESPACE -- make lint
   dependencies:
   - "Build shippingservice"
 
 Lint checkoutservice:
   extends: ".base_lint"
   script:
-  # TODO: replace with "werf kube-run"
-  - |
-    kubectl -n $WERF_NAMESPACE run --generator=run-pod/v1 lint-checkoutservice --image=$WERF_CHECKOUTSERVICE_SRC_DOCKER_IMAGE_NAME --rm -i --restart=Never --command --overrides='{"spec": {"imagePullSecrets": [{"name": "registrysecret"}]}}' -- make lint
+  - werf kube-run checkoutservice-src --namespace $TEST_NAMESPACE -- make lint
   dependencies:
   - "Build checkoutservice"
 
 Lint paymentservice:
   extends: ".base_lint"
   script:
-  # TODO: replace with "werf kube-run"
-  - |
-    kubectl -n $WERF_NAMESPACE run --generator=run-pod/v1 lint-paymentservice --image=$WERF_PAYMENTSERVICE_DOCKER_IMAGE_NAME --rm -i --restart=Never --command --overrides='{"spec": {"imagePullSecrets": [{"name": "registrysecret"}]}}' -- make lint
+  - werf kube-run paymentservice --namespace $TEST_NAMESPACE -- make lint
   dependencies:
   - "Build paymentservice"
 
 Lint currencyservice:
   extends: ".base_lint"
   script:
-  # TODO: replace with "werf kube-run"
-  - |
-    kubectl -n $WERF_NAMESPACE run --generator=run-pod/v1 lint-currencyservice --image=$WERF_CURRENCYSERVICE_DOCKER_IMAGE_NAME --rm -i --restart=Never --command --overrides='{"spec": {"imagePullSecrets": [{"name": "registrysecret"}]}}' -- make lint
+  - werf kube-run currencyservice --namespace $TEST_NAMESPACE -- make lint
   dependencies:
   - "Build currencyservice"
 
 .base_unit_tests:
   stage: tests
-  variables:
-    WERF_NAMESPACE: $CI_PROJECT_NAME-unit-tests-$CI_JOB_ID
-  before_script:
-  - kubectl create ns $WERF_NAMESPACE
-  after_script:
-  - kubectl delete ns $WERF_NAMESPACE --wait=false
   only:
   - main
   - merge_requests
   except:
   - schedules
-  tags: ["tfprod-distributed-werf"]
 
 Unit-tests cartservice:
   extends: ".base_unit_tests"
   script:
-  # TODO: replace with "werf kube-run"
-  - |
-    kubectl -n $WERF_NAMESPACE run --generator=run-pod/v1 unit-tests-cartservice --image=$WERF_CARTSERVICE_SRC_DOCKER_IMAGE_NAME --rm -i --restart=Never --command --overrides='{"spec": {"imagePullSecrets": [{"name": "registrysecret"}]}}' -- make unit-tests
+  - werf kube-run cartservice-src --namespace $TEST_NAMESPACE -- make unit-tests
   dependencies:
   - "Build cartservice"
 
 Unit-tests frontend:
   extends: ".base_unit_tests"
   script:
-  # TODO: replace with "werf kube-run"
-  - |
-    kubectl -n $WERF_NAMESPACE run --generator=run-pod/v1 unit-tests-frontend --image=$WERF_FRONTEND_SRC_DOCKER_IMAGE_NAME --rm -i --restart=Never --command --overrides='{"spec": {"imagePullSecrets": [{"name": "registrysecret"}]}}' -- make unit-tests
+  - werf kube-run frontend-src --namespace $TEST_NAMESPACE -- make unit-tests
   dependencies:
   - "Build frontend"
 
 Unit-tests productcatalogservice:
   extends: ".base_unit_tests"
   script:
-  # TODO: replace with "werf kube-run"
-  - |
-    kubectl -n $WERF_NAMESPACE run --generator=run-pod/v1 unit-tests-productcatalogservice --image=$WERF_PRODUCTCATALOGSERVICE_SRC_DOCKER_IMAGE_NAME --rm -i --restart=Never --command --overrides='{"spec": {"imagePullSecrets": [{"name": "registrysecret"}]}}' -- make unit-tests
+  - werf kube-run productcatalogservice-src --namespace $TEST_NAMESPACE -- make unit-tests
   dependencies:
   - "Build productcatalogservice"
 
 Unit-tests shippingservice:
   extends: ".base_unit_tests"
   script:
-  # TODO: replace with "werf kube-run"
-  - |
-    kubectl -n $WERF_NAMESPACE run --generator=run-pod/v1 unit-tests-shippingservice --image=$WERF_SHIPPINGSERVICE_SRC_DOCKER_IMAGE_NAME --rm -i --restart=Never --command --overrides='{"spec": {"imagePullSecrets": [{"name": "registrysecret"}]}}' -- make unit-tests
+  - werf kube-run shippingservice-src --namespace $TEST_NAMESPACE -- make unit-tests
   dependencies:
   - "Build shippingservice"
 
 Unit-tests checkoutservice:
   extends: ".base_unit_tests"
   script:
-  # TODO: replace with "werf kube-run"
-  - |
-    kubectl -n $WERF_NAMESPACE run --generator=run-pod/v1 unit-tests-checkoutservice --image=$WERF_CHECKOUTSERVICE_SRC_DOCKER_IMAGE_NAME --rm -i --restart=Never --command --overrides='{"spec": {"imagePullSecrets": [{"name": "registrysecret"}]}}' -- make unit-tests
+  - werf kube-run checkoutservice-src --namespace $TEST_NAMESPACE -- make unit-tests
   dependencies:
   - "Build checkoutservice"
 
@@ -253,18 +213,14 @@ Functional tests:
     WERF_SET_DOMAIN: domain=$CI_PROJECT_NAME-functional-tests.$CLUSTER_DOMAIN
     WERF_SET_ANNOTATIONS: annotations.nginx\.ingress\.kubernetes\.io/auth-url="http://basic-auth.kube-basic-auth.svc.cluster.local/argo"
   script:
-  - werf dismiss || true
   - werf converge
-  after_script:
-  - source <(werf ci-env gitlab)
-  - werf dismiss --with-namespace
   only:
   - main
   except:
   - schedules
 
-Publish bundle:
-  stage: publish
+Publish release:
+  stage: release
   script:
   - werf bundle publish --tag "0.1.${CI_PIPELINE_ID}"
   only:
@@ -272,7 +228,7 @@ Publish bundle:
   except:
   - schedules
 
-Werf cleanup:
+Cleanup registry:
   stage: cleanup
   script:
   - werf cr login "$WERF_REPO"
