@@ -1,4 +1,4 @@
-{{- if eq $.Values.werf.env "release-tests" }}
+{{- if eq $.Values.werf.env "functional-tests" }}
 apiVersion: batch/v1
 kind: Job
 metadata:

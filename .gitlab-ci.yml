@@ -2,7 +2,7 @@ stages:
 - build
 - test
 - review
-- test-release
+- prerelease-test
 - release
 - cleanup
 
@@ -73,7 +73,7 @@ Build frontend:
 Build adservice:
   extends: ".base_build"
   script:
-  - werf build adservice adservice-src
+  - werf build adservice
 
 Build functional-tests:
   extends: ".base_build"
@@ -183,7 +183,7 @@ Stop review:
   when: manual
 
 Functional tests:
-  stage: test-release
+  stage: prerelease-test
   resource_group: functional-tests
   environment:
     name: functional-tests
