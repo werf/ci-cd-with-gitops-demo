@@ -14,10 +14,6 @@
 
 FROM ghcr.io/werf/ci-cd-demo/openjdk:8-slim as builder
 
-RUN apt-get -qq update \
-    && apt-get install -y --no-install-recommends g++ make \
-    && rm -rf /var/lib/apt/lists/*
-
 WORKDIR /app
 
 COPY ["build.gradle", "gradlew", "./"]
@@ -31,11 +27,12 @@ RUN ./gradlew installDist
 
 FROM ghcr.io/werf/ci-cd-demo/openjdk:8-slim
 
+# Download Stackdriver Profiler Java agent
 RUN apt-get -y update && apt-get install -qqy \
-    wget make \
+    wget \
     && rm -rf /var/lib/apt/lists/*
 
-RUN GRPC_HEALTH_PROBE_VERSION=v0.4.6 && \
+RUN GRPC_HEALTH_PROBE_VERSION=v0.4.11 && \
     wget -qO/bin/grpc_health_probe https://github.com/grpc-ecosystem/grpc-health-probe/releases/download/${GRPC_HEALTH_PROBE_VERSION}/grpc_health_probe-linux-amd64 && \
     chmod +x /bin/grpc_health_probe
 
