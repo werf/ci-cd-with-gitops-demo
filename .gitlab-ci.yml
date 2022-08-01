@@ -7,10 +7,10 @@ stages:
 - cleanup
 
 default:
-  image: ghcr.io/werf/werf:1.2-alpha
+  image: ghcr.io/werf/werf:1.2-alpha-ubuntu
   before_script:
   - . $(werf ci-env gitlab --as-file)
-  tags: ["kubernetes-runner-for-werf"]
+  tags: [ "werf.kube-dev" ]
 
 variables:
   CLUSTER_DOMAIN: kube-dev.flant.com
