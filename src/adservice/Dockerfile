@@ -15,8 +15,7 @@
 FROM ghcr.io/werf/ci-cd-demo/openjdk:8-slim as builder
 
 RUN apt-get -qq update \
-    && apt-get install -y --no-install-recommends \
-        g++ make \
+    && apt-get install -y --no-install-recommends g++ make \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
