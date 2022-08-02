@@ -100,11 +100,6 @@ Lint frontend:
     refs:
     - main
     - merge_requests
-    changes:
-    - src/frontend/
-    - pb/
-    - werf.yaml
-    - .gitlab-ci.yml
 
 Lint productcatalogservice:
   extends: ".base_lint"
@@ -114,11 +109,6 @@ Lint productcatalogservice:
     refs:
     - main
     - merge_requests
-    changes:
-    - src/productcatalogservice/
-    - pb/
-    - werf.yaml
-    - .gitlab-ci.yml
 
 Lint shippingservice:
   extends: ".base_lint"
@@ -128,11 +118,6 @@ Lint shippingservice:
     refs:
     - main
     - merge_requests
-    changes:
-    - src/shippingservice/
-    - pb/
-    - werf.yaml
-    - .gitlab-ci.yml
 
 Lint checkoutservice:
   extends: ".base_lint"
@@ -142,11 +127,6 @@ Lint checkoutservice:
     refs:
     - main
     - merge_requests
-    changes:
-    - src/checkoutservice/
-    - pb/
-    - werf.yaml
-    - .gitlab-ci.yml
 
 Lint paymentservice:
   extends: ".base_lint"
@@ -156,11 +136,6 @@ Lint paymentservice:
     refs:
     - main
     - merge_requests
-    changes:
-    - src/paymentservice/
-    - pb/
-    - werf.yaml
-    - .gitlab-ci.yml
 
 Lint currencyservice:
   extends: ".base_lint"
@@ -170,11 +145,6 @@ Lint currencyservice:
     refs:
     - main
     - merge_requests
-    changes:
-    - src/currencyservice/
-    - pb/
-    - werf.yaml
-    - .gitlab-ci.yml
 
 Unit tests cartservice:
   extends: ".base_unit_tests"
@@ -184,11 +154,6 @@ Unit tests cartservice:
     refs:
     - main
     - merge_requests
-    changes:
-    - src/cartservice/
-    - pb/
-    - werf.yaml
-    - .gitlab-ci.yml
 
 Unit tests frontend:
   extends: ".base_unit_tests"
@@ -198,11 +163,6 @@ Unit tests frontend:
     refs:
     - main
     - merge_requests
-    changes:
-    - src/frontend/
-    - pb/
-    - werf.yaml
-    - .gitlab-ci.yml
 
 Unit tests productcatalogservice:
   extends: ".base_unit_tests"
@@ -212,11 +172,6 @@ Unit tests productcatalogservice:
     refs:
     - main
     - merge_requests
-    changes:
-    - src/productcatalogservice/
-    - pb/
-    - werf.yaml
-    - .gitlab-ci.yml
 
 Unit tests shippingservice:
   extends: ".base_unit_tests"
@@ -226,11 +181,6 @@ Unit tests shippingservice:
     refs:
     - main
     - merge_requests
-    changes:
-    - src/shippingservice/
-    - pb/
-    - werf.yaml
-    - .gitlab-ci.yml
 
 Unit tests checkoutservice:
   extends: ".base_unit_tests"
@@ -240,11 +190,6 @@ Unit tests checkoutservice:
     refs:
     - main
     - merge_requests
-    changes:
-    - src/checkoutservice/
-    - pb/
-    - werf.yaml
-    - .gitlab-ci.yml
 
 .base_review:
   stage: review
