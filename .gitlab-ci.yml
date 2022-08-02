@@ -239,6 +239,8 @@ Deploy review:
     on_stop: "Stop review"
   script:
   - werf converge
+  rules:
+  - when: manual
 
 Stop review:
   extends: ".base_review"
