@@ -256,7 +256,7 @@ Unit tests checkoutservice:
     WERF_NAMESPACE: $CI_PROJECT_NAME-$CI_MERGE_REQUEST_SOURCE_BRANCH_NAME
     WERF_RELEASE: $CI_PROJECT_NAME-$CI_MERGE_REQUEST_SOURCE_BRANCH_NAME
     WERF_SET_DOMAIN: domain=$CI_PROJECT_NAME-$CI_MERGE_REQUEST_SOURCE_BRANCH_NAME.$CLUSTER_DOMAIN
-    WERF_SET_ANNOTATIONS: annotations.nginx\.ingress\.kubernetes\.io/auth-url="http://basic-auth.kube-basic-auth.svc.cluster.local/argo"
+    WERF_SET_ANNOTATIONS: annotations.nginx\.ingress\.kubernetes\.io/auth-url=http://basic-auth.kube-basic-auth.svc.cluster.local/argo
   only:
   - merge_requests
   except:
@@ -285,9 +285,9 @@ Functional tests:
     name: functional-tests
   variables:
     WERF_SET_DOMAIN: domain=$CI_PROJECT_NAME-functional-tests.$CLUSTER_DOMAIN
-    WERF_SET_ANNOTATIONS: annotations.nginx\.ingress\.kubernetes\.io/auth-url="http://basic-auth.kube-basic-auth.svc.cluster.local/argo"
+    WERF_SET_ANNOTATIONS: annotations.nginx\.ingress\.kubernetes\.io/auth-url=http://basic-auth.kube-basic-auth.svc.cluster.local/argo
   script:
-  - exit 0
+  - werf converge
   only:
   - main
   except:

@@ -19,14 +19,14 @@ spec:
             name: frontend
             port:
               number: 80
-  {{- if has $.Values.werf.env (list "production" "review") }}
+  {{- if has $.Values.werf.env (list "disabled") }}
   tls:
   - hosts:
     - {{ $.Values.domain | required "$.Values.domain required" | quote }}
     secretName: boutique-tls
   {{- end }}
 
-{{- if has $.Values.werf.env (list "production" "review") }}
+{{- if has $.Values.werf.env (list "disabled") }}
 ---
 apiVersion: cert-manager.io/v1
 kind: Certificate
