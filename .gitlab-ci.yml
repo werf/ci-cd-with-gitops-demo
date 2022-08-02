@@ -232,6 +232,7 @@ Unit tests checkoutservice:
   - merge_requests
   except:
   - schedules
+  when: manual
 
 Deploy review:
   extends: ".base_review"
@@ -239,8 +240,6 @@ Deploy review:
     on_stop: "Stop review"
   script:
   - werf converge
-  rules:
-  - when: manual
 
 Stop review:
   extends: ".base_review"
