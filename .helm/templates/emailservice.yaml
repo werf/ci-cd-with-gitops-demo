@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-{{- if eq $.Values.werf.env "production" }}
+{{- if eq $.Values.werf.env "disabled" }}
 apiVersion: argoproj.io/v1alpha1
 kind: Rollout
 {{- else }}
@@ -22,7 +22,7 @@ kind: Deployment
 metadata:
   name: emailservice
 spec:
-  {{- if eq $.Values.werf.env "production" }}
+  {{- if eq $.Values.werf.env "disabled" }}
   replicas: 2
   strategy:
     canary:
