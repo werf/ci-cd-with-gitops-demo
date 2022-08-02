@@ -94,31 +94,67 @@ Lint frontend:
   extends: ".base_lint"
   script:
   - werf kube-run frontend-src --namespace $TEST_NAMESPACE -- make lint
+  only:
+    changes:
+    - src/frontend/
+    - pb/
+    - werf.yaml
+    - .gitlab-ci.yml
 
 Lint productcatalogservice:
   extends: ".base_lint"
   script:
   - werf kube-run productcatalogservice-src --namespace $TEST_NAMESPACE -- make lint
+  only:
+    changes:
+    - src/productcatalogservice/
+    - pb/
+    - werf.yaml
+    - .gitlab-ci.yml
 
 Lint shippingservice:
   extends: ".base_lint"
   script:
   - werf kube-run shippingservice-src --namespace $TEST_NAMESPACE -- make lint
+  only:
+    changes:
+    - src/shippingservice/
+    - pb/
+    - werf.yaml
+    - .gitlab-ci.yml
 
 Lint checkoutservice:
   extends: ".base_lint"
   script:
   - werf kube-run checkoutservice-src --namespace $TEST_NAMESPACE -- make lint
+  only:
+    changes:
+    - src/checkoutservice/
+    - pb/
+    - werf.yaml
+    - .gitlab-ci.yml
 
 Lint paymentservice:
   extends: ".base_lint"
   script:
   - werf kube-run paymentservice --namespace $TEST_NAMESPACE -- make lint
+  only:
+    changes:
+    - src/paymentservice/
+    - pb/
+    - werf.yaml
+    - .gitlab-ci.yml
 
 Lint currencyservice:
   extends: ".base_lint"
   script:
   - werf kube-run currencyservice --namespace $TEST_NAMESPACE -- make lint
+  only:
+    changes:
+    - src/currencyservice/
+    - pb/
+    - werf.yaml
+    - .gitlab-ci.yml
 
 .base_unit_tests:
   stage: test
@@ -132,26 +168,56 @@ Unit tests cartservice:
   extends: ".base_unit_tests"
   script:
   - werf kube-run cartservice-src --namespace $TEST_NAMESPACE -- make unit-tests
+  only:
+    changes:
+    - src/cartservice/
+    - pb/
+    - werf.yaml
+    - .gitlab-ci.yml
 
 Unit tests frontend:
   extends: ".base_unit_tests"
   script:
   - werf kube-run frontend-src --namespace $TEST_NAMESPACE -- make unit-tests
+  only:
+    changes:
+    - src/frontend/
+    - pb/
+    - werf.yaml
+    - .gitlab-ci.yml
 
 Unit tests productcatalogservice:
   extends: ".base_unit_tests"
   script:
   - werf kube-run productcatalogservice-src --namespace $TEST_NAMESPACE -- make unit-tests
+  only:
+    changes:
+    - src/productcatalogservice/
+    - pb/
+    - werf.yaml
+    - .gitlab-ci.yml
 
 Unit tests shippingservice:
   extends: ".base_unit_tests"
   script:
   - werf kube-run shippingservice-src --namespace $TEST_NAMESPACE -- make unit-tests
+  only:
+    changes:
+    - src/shippingservice/
+    - pb/
+    - werf.yaml
+    - .gitlab-ci.yml
 
 Unit tests checkoutservice:
   extends: ".base_unit_tests"
   script:
   - werf kube-run checkoutservice-src --namespace $TEST_NAMESPACE -- make unit-tests
+  only:
+    changes:
+    - src/checkoutservice/
+    - pb/
+    - werf.yaml
+    - .gitlab-ci.yml
 
 .base_review:
   stage: review
