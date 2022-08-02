@@ -25,6 +25,16 @@ variables:
   except:
   - schedules
 
+.base_lint:
+  stage: test
+  except:
+  - schedules
+
+.base_unit_tests:
+  stage: test
+  except:
+  - schedules
+
 Build emailservice:
   extends: ".base_build"
   script:
@@ -82,19 +92,14 @@ Build functional-tests:
   only:
   - main
 
-.base_lint:
-  stage: test
-  only:
-  - main
-  - merge_requests
-  except:
-  - schedules
-
 Lint frontend:
   extends: ".base_lint"
   script:
   - werf kube-run frontend-src --namespace $TEST_NAMESPACE -- make lint
   only:
+    refs:
+    - main
+    - merge_requests
     changes:
     - src/frontend/
     - pb/
@@ -106,6 +111,9 @@ Lint productcatalogservice:
   script:
   - werf kube-run productcatalogservice-src --namespace $TEST_NAMESPACE -- make lint
   only:
+    refs:
+    - main
+    - merge_requests
     changes:
     - src/productcatalogservice/
     - pb/
@@ -117,6 +125,9 @@ Lint shippingservice:
   script:
   - werf kube-run shippingservice-src --namespace $TEST_NAMESPACE -- make lint
   only:
+    refs:
+    - main
+    - merge_requests
     changes:
     - src/shippingservice/
     - pb/
@@ -128,6 +139,9 @@ Lint checkoutservice:
   script:
   - werf kube-run checkoutservice-src --namespace $TEST_NAMESPACE -- make lint
   only:
+    refs:
+    - main
+    - merge_requests
     changes:
     - src/checkoutservice/
     - pb/
@@ -139,6 +153,9 @@ Lint paymentservice:
   script:
   - werf kube-run paymentservice --namespace $TEST_NAMESPACE -- make lint
   only:
+    refs:
+    - main
+    - merge_requests
     changes:
     - src/paymentservice/
     - pb/
@@ -150,25 +167,23 @@ Lint currencyservice:
   script:
   - werf kube-run currencyservice --namespace $TEST_NAMESPACE -- make lint
   only:
+    refs:
+    - main
+    - merge_requests
     changes:
     - src/currencyservice/
     - pb/
     - werf.yaml
     - .gitlab-ci.yml
 
-.base_unit_tests:
-  stage: test
-  only:
-  - main
-  - merge_requests
-  except:
-  - schedules
-
 Unit tests cartservice:
   extends: ".base_unit_tests"
   script:
   - werf kube-run cartservice-src --namespace $TEST_NAMESPACE -- make unit-tests
   only:
+    refs:
+    - main
+    - merge_requests
     changes:
     - src/cartservice/
     - pb/
@@ -180,6 +195,9 @@ Unit tests frontend:
   script:
   - werf kube-run frontend-src --namespace $TEST_NAMESPACE -- make unit-tests
   only:
+    refs:
+    - main
+    - merge_requests
     changes:
     - src/frontend/
     - pb/
@@ -191,6 +209,9 @@ Unit tests productcatalogservice:
   script:
   - werf kube-run productcatalogservice-src --namespace $TEST_NAMESPACE -- make unit-tests
   only:
+    refs:
+    - main
+    - merge_requests
     changes:
     - src/productcatalogservice/
     - pb/
@@ -202,6 +223,9 @@ Unit tests shippingservice:
   script:
   - werf kube-run shippingservice-src --namespace $TEST_NAMESPACE -- make unit-tests
   only:
+    refs:
+    - main
+    - merge_requests
     changes:
     - src/shippingservice/
     - pb/
@@ -213,6 +237,9 @@ Unit tests checkoutservice:
   script:
   - werf kube-run checkoutservice-src --namespace $TEST_NAMESPACE -- make unit-tests
   only:
+    refs:
+    - main
+    - merge_requests
     changes:
     - src/checkoutservice/
     - pb/
