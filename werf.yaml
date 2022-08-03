@@ -1,87 +1,62 @@
 project: ci-cd-with-gitops-demo
 configVersion: 1
-
 ---
 image: emailservice
 context: src/emailservice
 dockerfile: Dockerfile
-
 ---
 image: emailservice-src
 context: src/emailservice
 dockerfile: Dockerfile
 target: builder
-
 ---
 image: productcatalogservice
 context: src/productcatalogservice
 dockerfile: Dockerfile
-
 ---
 image: productcatalogservice-src
 context: src/productcatalogservice
 dockerfile: Dockerfile
 target: builder
-
 ---
 image: recommendationservice
 context: src/recommendationservice
 dockerfile: Dockerfile
-
 ---
 image: shippingservice
 context: src/shippingservice
 dockerfile: Dockerfile
-
 ---
 image: shippingservice-src
 context: src/shippingservice
 dockerfile: Dockerfile
 target: builder
-
 ---
 image: checkoutservice
 context: src/checkoutservice
 dockerfile: Dockerfile
-
 ---
 image: checkoutservice-src
 context: src/checkoutservice
 dockerfile: Dockerfile
 target: builder
-
 ---
 image: paymentservice
 context: src/paymentservice
 dockerfile: Dockerfile
-
 ---
 image: currencyservice
 context: src/currencyservice
 dockerfile: Dockerfile
-
 ---
 image: cartservice
 context: src/cartservice/src
 dockerfile: Dockerfile
-
 ---
 image: cartservice-src
 context: src/cartservice/src
 dockerfile: Dockerfile
 target: builder
-
----
-image: frontend
-context: src/frontend
-dockerfile: Dockerfile
-
----
-image: frontend-src
-context: src/frontend
-dockerfile: Dockerfile
-target: builder
-
 ---
 image: functional-tests
 context: test/functional
@@ -118,3 +93,43 @@ import:
   after: install
   add: /app
   to: /app
+
+---
+image: frontend-src
+from: ghcr.io/werf/ci-cd-demo/golang:1.17.5-alpine
+git:
+- add: /src/frontend
+  to: /app
+  stageDependencies:
+    install:
+    - go.mod
+    - go.sum
+    setup:
+    - '**/*.go'
+shell:
+  beforeInstall:
+  - apk add --no-cache ca-certificates git make build-base
+  install:
+  - cd /app ; go mod download
+  setup:
+  - cd /app ; go build -o /go/bin/frontend .
+docker:
+  WORKDIR: /app
+
+---
+image: frontend
+from: ghcr.io/werf/ci-cd-demo/alpine
+git:
+- add: /src/frontend/templates
+  to: /app/templates
+- add: /src/frontend/static
+  to: /app/static
+import:
+- image: frontend-src
+  after: install
+  add: /go/bin/frontend
+  to: /app/server
+docker:
+  WORKDIR: /app
+  EXPOSE: ["8080"]
+  ENTRYPOINT: "/app/server"
