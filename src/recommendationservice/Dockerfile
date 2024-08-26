@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM ghcr.io/werf/ci-cd-demo/python:3.7-slim
+FROM ghcr.io/werf/ci-cd-demo/python:3.7-slim@sha256:487c13752d82fb79f4a92368a77b17038c78c0a8a1cfb693a8a556a350f401d0
 RUN apt-get update -qqy && \
 	apt-get -qqy install wget g++ make && \
 	rm -rf /var/lib/apt/lists/*

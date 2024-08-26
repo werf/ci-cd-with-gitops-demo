@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM ghcr.io/werf/ci-cd-demo/node:16-alpine as base
+FROM ghcr.io/werf/ci-cd-demo/node:16-alpine@sha256:425c81a04546a543da824e67c91d4a603af16fbc3d875ee2f276acf8ec2b1577 as base
 
 FROM base as builder
 

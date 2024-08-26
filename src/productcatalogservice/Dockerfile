@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM ghcr.io/werf/ci-cd-demo/golang:1.17.5-alpine AS builder
+FROM ghcr.io/werf/ci-cd-demo/golang:1.17.5-alpine@sha256:8474650232fca6807a8567151ee0a6bd2a54ea28cfc93f7824b42267ef4af693 AS builder
 RUN apk add --no-cache ca-certificates git make
 RUN apk add build-base
 
@@ -23,7 +23,7 @@ COPY . .
 
 RUN go build -o /productcatalogservice .
 
-FROM ghcr.io/werf/ci-cd-demo/alpine AS release
+FROM ghcr.io/werf/ci-cd-demo/alpine@sha256:e7d88de73db3d3fd9b2d63aa7f447a10fd0220b7cbf39803c803f2af9ba256b3 AS release
 RUN apk add --no-cache ca-certificates make
 RUN GRPC_HEALTH_PROBE_VERSION=v0.4.6 && \
     wget -qO/bin/grpc_health_probe https://github.com/grpc-ecosystem/grpc-health-probe/releases/download/${GRPC_HEALTH_PROBE_VERSION}/grpc_health_probe-linux-amd64 && \
