@@ -14,7 +14,7 @@
 
 # https://mcr.microsoft.com/v2/dotnet/sdk/tags/list
 
-FROM mcr.microsoft.com/dotnet/sdk:6.0.101 as builder
+FROM mcr.microsoft.com/dotnet/sdk:6.0.425@sha256:6df1177e48b55272316d08f19cb383483af82aca5cdc67a76c414bc200847624 as builder
 
 RUN apt-get -qq update \
     && apt-get install -y --no-install-recommends \
@@ -29,7 +29,7 @@ COPY . .
 RUN dotnet publish cartservice.csproj -p:PublishSingleFile=true -r linux-musl-x64 --self-contained true -p:PublishTrimmed=True -p:TrimMode=Link -c release -o /cartservice --no-restore
 
 # https://mcr.microsoft.com/v2/dotnet/runtime-deps/tags/list
-FROM mcr.microsoft.com/dotnet/runtime-deps:6.0.1-alpine3.14-amd64
+FROM mcr.microsoft.com/dotnet/runtime-deps:6.0.6-alpine3.14-amd64@sha256:f5402e55b58904ab2e94ec1a04d3b214ea653e0b97a0e876343ec90e77727f40
 RUN GRPC_HEALTH_PROBE_VERSION=v0.4.6 && \
     wget -qO/bin/grpc_health_probe https://github.com/grpc-ecosystem/grpc-health-probe/releases/download/${GRPC_HEALTH_PROBE_VERSION}/grpc_health_probe-linux-amd64 && \
     chmod +x /bin/grpc_health_probe
