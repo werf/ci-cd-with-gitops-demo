@@ -14,7 +14,7 @@
 
 # https://mcr.microsoft.com/v2/dotnet/sdk/tags/list
 
-FROM mcr.microsoft.com/dotnet/sdk:6.0.101 as builder
+FROM mcr.microsoft.com/dotnet/sdk:8.0.401@sha256:8c6beed050a602970c3d275756ed3c19065e42ce6ca0809f5a6fcbf5d36fd305 as builder
 
 RUN apt-get -qq update \
     && apt-get install -y --no-install-recommends \
