@@ -7,7 +7,7 @@ stages:
 - cleanup
 
 default:
-  image: ghcr.io/werf/werf:1.2-alpha-ubuntu
+  image: ghcr.io/werf/werf:3-alpha-ubuntu
   before_script:
   - . $(werf ci-env gitlab --as-file)
   tags: [ "werf.kube-dev" ]

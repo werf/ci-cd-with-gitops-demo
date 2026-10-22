@@ -84,10 +84,12 @@ shell:
   - export RUN GRPC_HEALTH_PROBE_VERSION=v0.4.11
   - wget -qO/bin/grpc_health_probe https://github.com/grpc-ecosystem/grpc-health-probe/releases/download/${GRPC_HEALTH_PROBE_VERSION}/grpc_health_probe-linux-amd64
   - chmod +x /bin/grpc_health_probe
-docker:
-  WORKDIR: /app
-  EXPOSE: ["9555"]
-  ENTRYPOINT: "/app/build/install/hipstershop/bin/AdService"
+imageSpec:
+  config:
+    workingDir: /app
+    expose: ["9555"]
+    entrypoint: ["/bin/sh", "-c", "/app/build/install/hipstershop/bin/AdService"]
+    clearCmd: true
 import:
 - image: adservice-src
   after: install
@@ -113,8 +115,9 @@ shell:
   - cd /app ; go mod download
   setup:
   - cd /app ; go build -o /go/bin/frontend .
-docker:
-  WORKDIR: /app
+imageSpec:
+  config:
+    workingDir: /app
 
 ---
 image: frontend
@@ -129,7 +132,9 @@ import:
   after: install
   add: /go/bin/frontend
   to: /app/server
-docker:
-  WORKDIR: /app
-  EXPOSE: ["8080"]
-  ENTRYPOINT: "/app/server"
+imageSpec:
+  config:
+    workingDir: /app
+    expose: ["8080"]
+    entrypoint: ["/bin/sh", "-c", "/app/server"]
+    clearCmd: true
