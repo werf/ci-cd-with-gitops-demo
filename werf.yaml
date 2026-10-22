@@ -87,7 +87,7 @@ shell:
 imageSpec:
   config:
     workingDir: /app
-    expose: ["9555"]
+    expose: ["9555/tcp"]
     entrypoint: ["/bin/sh", "-c", "/app/build/install/hipstershop/bin/AdService"]
     clearCmd: true
 import:
@@ -135,6 +135,6 @@ import:
 imageSpec:
   config:
     workingDir: /app
-    expose: ["8080"]
+    expose: ["8080/tcp"]
     entrypoint: ["/bin/sh", "-c", "/app/server"]
     clearCmd: true
