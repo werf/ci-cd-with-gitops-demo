@@ -121,7 +121,7 @@ imageSpec:
 
 ---
 image: frontend
-from: ghcr.io/werf/ci-cd-demo/alpine
+from: ghcr.io/werf/ci-cd-demo/alpine:latest
 git:
 - add: /src/frontend/templates
   to: /app/templates
